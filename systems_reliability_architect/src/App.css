@@ -24,6 +24,8 @@
   color: white;
 }
 
+
+
 .App-link {
   color: #61dafb;
 }
@@ -35,4 +37,29 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.content-container {
+    position: relative;
+    min-height: calc(100vh - 60px);
+}
+
+.image-setting-home {
+    height: calc(100vh - 126px);
+}
+
+.footer {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    height: 60px;
+    background-color: #212529;
+    color: #fff;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
 }
