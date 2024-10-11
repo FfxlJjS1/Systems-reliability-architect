@@ -5,9 +5,23 @@ import { Container, Col, Row } from "react-bootstrap";
 import './customizable.css';
 
 export function CustomizableNode({ data }) {
+    const nodeWidth = data.width;
+    const nodeHeight = data.width;
+    const logo = null;
+
+    const [panel_visible_state, set_focus_state] = useState(false);
+
+    const onFocusToChangePanelVisible = (e) => {
+        set_focus_state(!panel_visible_state);
+    }
+
+    const handleCloseNodePanel = (e) => {
+        set_focus_state(false);
+    }
+
     return (
         <>
-            <NodeToolbar>
+            <NodeToolbar isVisible={data.isGroupNode != true ? true : false} style={{zIndex: 3} }>
 
             </NodeToolbar>
 

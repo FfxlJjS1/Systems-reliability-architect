@@ -28,3 +28,5 @@ function MyDiagram(props) {
         </div>
     );
 }
+
+export default MyDiagram;
