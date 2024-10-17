@@ -13,6 +13,16 @@
   }
 }
 
+.node-status-panel {
+  min-width: 200px;
+  background: #ccc;
+  padding: 5px;
+  padding-right: 20px;
+  border: solid 1px black;
+  float: left;
+}
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
