@@ -1,19 +1,30 @@
-import React, {Component} from 'react'
+import React, {Component, useState} from 'react'
 
-import MyDiagram from '../Components/Diagram/MyDiagram'
+import MyDiagram, {initialNodes, NodesEdges}  from '../Components/Diagram/MyDiagram'
 import ProbabilityChart from './FailureFreeOperatoinProbabilityChart'
 import { Container, Button, Form } from 'react-bootstrap'
 
 export class Home extends Component {
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
-
+            my_graphic: null
         }
     }
 
     render() {
+        const handleToClearObjects = (e) => {
+            NodesEdges.setEdges([]);
+            NodesEdges.setNodes(initialNodes);
+        }
+
+        const handleDisplayGraphicOfEntiryStructure = (e) => {
+            // Преобразовать узлы и отношения для графика
+
+            this.setState({my_graphic: <ProbabilityChart/>})
+        }
+
         return (
                 <Container className='mt-2'>
                     <Container style={{width: '800px'}}>
@@ -22,7 +33,7 @@ export class Home extends Component {
                                 className='mt-3 mb-3'
                                 variant='primary'
                                 type="button"
-                                onClick={null}>
+                                onClick={handleToClearObjects}>
                                 Очистить объекты
                             </Button>
 
@@ -38,7 +49,7 @@ export class Home extends Component {
                                 className='mt-3 mb-3'
                                 variant='primary'
                                 type="button"
-                                onClick={null}>
+                                onClick={handleDisplayGraphicOfEntiryStructure}>
                                 Построить график по всей ИС
                             </Button>
 
@@ -53,8 +64,10 @@ export class Home extends Component {
                     </Container>
 
                     <Container style={{minWidth: '1000px', minHeight: '830px'}}>
-                        <MyDiagram/>
+                        <MyDiagram />
                     </Container>
+                    
+                    {this.state.my_graphic}
                 </Container>
         )
     }

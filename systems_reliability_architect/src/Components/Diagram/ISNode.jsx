@@ -3,10 +3,9 @@ import { Handle, Position, NodeToolbar } from 'reactflow';
 import { Col, Row, Container, Form } from "react-bootstrap";
 
 export function ISNode({ data }) {
-    const customizeProp = data.customize;
     const nodeWidth = data.width;
     const nodeHeight = data.height;
-
+    
     // Focus and blur node
     const [panel_visible_state, set_focus_state] = useState(false);
 
@@ -14,41 +13,100 @@ export function ISNode({ data }) {
         set_focus_state(!panel_visible_state);
     }
 
-    const [node_panel_text, set_node_panel_text] = useState(<div><label htmlFor="text" style={{ marginTop: '5px' }}>Reload</label></div>);
+    const [law_number, set_law_number] = useState("1")
 
-    const handleReloadNodeInformation = (e) => {
-        set_node_panel_text(<div><label>Текст</label></div>)
+    const [label, set_label] = useState(data.label)
+    const [parameters, set_parameter] = useState({"lambda": 0.0})
+
+    const handleSelectLaw = (value) => {
+        if (value == "1")
+            set_parameter({"lambda": 0.0});
+        else if (value == "2")
+            set_parameter({"sigma": 0.0});
+        else if (value == "3")
+            set_parameter({"lambda_1": 0.0, "m": 0.0});
+
+        set_law_number(value);
     }
 
-    data.handleReloadNodeInformation = handleReloadNodeInformation;
+    const handleOnInput = (parameter_name, value) => {
+        let params = {};
+        
+        Object.assign(params, parameters);
+
+        params[parameter_name] = value;
+
+        data.parameters = params;
+
+        set_parameter(params);
+    }
 
     return (
         <>
             <NodeToolbar 
                 position={Position.Left}
-                isVisible={data.isGroupNode != true ? true : false}
                 style={{zIndex: 3} }>
-                <Container className="node-status-panel" style={{ display: panel_visible_state ? '' : 'none', paddingRight: "0px" }}>
+                <Container className="node-status-panel" style={{ width: '200px', display: panel_visible_state ? '' : 'none', paddingRight: "0px" }}>
                     <Form>
                         <Form.Group>
-                            <Form.Select style={{width: '180px'}}>
+                            <Form.Label>Имя узла:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder='Имя узла'
+                                value={label}
+                                onInput={e => set_label(e.target.value)}
+                                />
+                        </Form.Group>
+                        <br/>
+                        <Form.Group>
+                            <Form.Label>Вид закона:</Form.Label>
+                            <Form.Select style={{width: '20 0px'}} onChange={e => handleSelectLaw(e.target.value)}>
                                 <option value="1">Экспоненциальный закон</option>
                                 <option value="2">Распределение Рэлея</option>
                                 <option value="3">Распределение Вэйбулля</option>
                             </Form.Select>
                         </Form.Group>
+                        <br/>
+                        <Form.Group style={{ display: law_number == "1" ? '' : 'none'}}>
+                            <Form.Label>Параметр lambda:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="обьём м³"
+                                pattern="[0-9]*"
+                                value={parameters["lambda"]}
+                                onInput={e => handleOnInput("lambda", e.target.value)}
+                                />
+                        </Form.Group>
+                        <Form.Group style={{ display: law_number == "2" ? '' : 'none'}}>
+                            <Form.Label>Параметр sigma:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="обьём м³"
+                                pattern="[0-9]*"
+                                value={parameters["sigma"]}
+                                onInput={e => handleOnInput("sigma", e.target.value)}
+                                />
+                        </Form.Group>
+                        <Form.Group style={{ display: law_number == "3" ? '' : 'none'}}>
+                            <Form.Label>Параметр lambda_1:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="обьём м³"
+                                pattern="[0-9]*"
+                                value={parameters["lambda_1"]}
+                                onInput={e => handleOnInput("lambda_1", e.target.value)}
+                                />
+                                <br/>
+                            <Form.Label>Параметр m:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="обьём м³"
+                                pattern="[0-9]*"
+                                value={parameters["m"]}
+                                onInput={e => handleOnInput("m", e.target.value)}
+                                />
+                        </Form.Group>
                     </Form>
-                    <Row className="node-button-panel-area">
-                        <Col md="auto">
-                            <button onClick={handleReloadNodeInformation}>↻</button>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                    <Col md="auto">
-                            {node_panel_text}
-                        </Col>
-                    </Row>
                 </Container>
             </NodeToolbar>
 
@@ -57,7 +115,7 @@ export function ISNode({ data }) {
                 <Handle type="source" position={Position.Right} />
 
                 <div style={{ display: 'flex' }} >
-                    <label htmlFor="text" style={{ marginLeft: 10, marginTop: 4, whiteSpace: 'nowrap' }} >{data.label}</label>
+                    <label htmlFor="text" style={{ marginLeft: 10, marginTop: 4, whiteSpace: 'nowrap' }} >{label}</label>
                 </div>
             </div>
         </>

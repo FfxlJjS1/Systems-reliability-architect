@@ -16,7 +16,7 @@ const node_types = {
     end_node: EndNode
 };
 
-const initialNodes = [
+export const initialNodes = [
     {
         id: '0',
         type: 'begin_node',
@@ -34,6 +34,13 @@ const initialNodes = [
 let id = 2;
 const getId = () => `${id++}`;
 
+export class NodesEdges {
+    static nodes = [];
+    static setNodes = null;
+    static edges = [];
+    static setEdges = null;
+}
+
 const DnDFlow = () => {
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -41,11 +48,13 @@ const DnDFlow = () => {
     const { screenToFlowPosition } = useReactFlow();
     const [type] = useDnD();
 
+    NodesEdges.nodes = nodes;
+    NodesEdges.setNodes = setNodes;
+    NodesEdges.edges = edges;
+    NodesEdges.setEdges = setEdges;
+
     const onConnect = useCallback(
         (params) => {
-            console.log(params);
-            console.log(nodes);
-
             // Настроить проверку на отсутствие зацикленности
 
             setEdges((eds) => addEdge(params, eds));
