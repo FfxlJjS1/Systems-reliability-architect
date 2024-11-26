@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Handle, Position, NodeToolbar } from 'reactflow';
 import { Col, Row, Container, Form } from "react-bootstrap";
 
@@ -19,12 +19,16 @@ export function ISNode({ data }) {
     const [parameters, set_parameter] = useState({"lambda": 0.0})
 
     const handleSelectLaw = (value) => {
-        if (value == "1")
-            set_parameter({"lambda": 0.0});
-        else if (value == "2")
-            set_parameter({"sigma": 0.0});
-        else if (value == "3")
-            set_parameter({"lambda_1": 0.0, "m": 0.0});
+        if (value == "1") {
+            handleOnInput("lambda", 0.0);
+        }
+        else if (value == "2") {
+            handleOnInput("sigma", 0.0);
+        }
+        else if (value == "3") {
+            handleOnInput("lambda_1", 0.0);
+            handleOnInput("m", 0.0);
+        }
 
         set_law_number(value);
     }
@@ -34,12 +38,20 @@ export function ISNode({ data }) {
         
         Object.assign(params, parameters);
 
+        params["Тип закона распределения"] = law_number;
+
         params[parameter_name] = value;
 
         data.parameters = params;
 
         set_parameter(params);
     }
+
+    useEffect(() => {
+        if (data.id != 0 && data.id != 1) {
+            handleSelectLaw(1);
+        }
+    }, []);
 
     return (
         <>

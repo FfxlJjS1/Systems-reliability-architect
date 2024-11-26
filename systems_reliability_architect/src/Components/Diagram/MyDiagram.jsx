@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from "react";
-import ReactFlow, { Background, MiniMap, useNodesState, useEdgesState, useReactFlow, Controls, ReactFlowProvider, addEdge } from 'reactflow'
+import ReactFlow, { Background, MiniMap, MarkerType, useNodesState, useEdgesState, useReactFlow, Controls, ReactFlowProvider, addEdge } from 'reactflow'
 
 import Sidebar from './Sidebar';
 import { DnDProvider, useDnD } from './DnDContext';
@@ -56,6 +56,13 @@ const DnDFlow = () => {
     const onConnect = useCallback(
         (params) => {
             // Настроить проверку на отсутствие зацикленности
+
+            params["markerEnd"] = {
+                type: MarkerType.ArrowClosed,
+                width: 16,
+                height: 16,
+                color: '#FF0072',
+            };
 
             setEdges((eds) => addEdge(params, eds));
         },
