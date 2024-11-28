@@ -100,7 +100,7 @@ const DnDFlow = () => {
     );
 
     return (
-        <div className="dndflow" style={{border: '1px solid red', height: '600px'}}>
+        <div className="dndflow" style={{border: '1px solid red'}}>
             <div className="reactflow-wrapper" ref={reactFlowWrapper}>
                 <ReactFlow
                     nodes={nodes}
@@ -123,11 +123,13 @@ const DnDFlow = () => {
 
 function MyDiagram(props) {
     return (
-        <ReactFlowProvider>
-            <DnDProvider>
-                <DnDFlow />
-            </DnDProvider>
-        </ReactFlowProvider>
+        <div className="main-content">
+            <ReactFlowProvider>
+                <DnDProvider>
+                    <DnDFlow />
+                </DnDProvider>
+            </ReactFlowProvider>
+        </div>
     );
 }
 

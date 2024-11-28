@@ -1,14 +1,20 @@
 import './App.css';
 
-import Home from './Pages/Home';
+import MyDiagram from './Components/Diagram/MyDiagram';
+import ProbabilityPanel from './Components/ProbabilityPanel/ProbabilityPanel';
 import Footer from './Components/Fotter'
+import { Container } from 'react-bootstrap';
 
 function App() {
   return (
-    <>
-      <Home className="content-container"/>
-      <Footer className="footer"/>
-    </>
+    <Container className='app'>
+      <Container className='content'>
+        <MyDiagram />
+        <ProbabilityPanel />
+      </Container>
+
+      <Footer/>
+    </Container>
   );
 }
 

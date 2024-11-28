@@ -1,30 +1,38 @@
-import { Component } from "react";
+import React from "react";
+import { useState } from "react";
 import {Container, Form, Button} from 'react-bootstrap';
-
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import transform_structure_from_mydiagram_to_graph from './DiagramTransformator';
+import Queue from '../Queue'
 
-import Queue from "../Components/Queue";
+import { NodesEdges } from "../Diagram/MyDiagram";
 
-export class ProbabilityChart extends Component {
-    constructor(props) {
-        super (props);
+const RangeProbabilityChartTab = () => {
+    const [begin_t, set_begin_t] = useState(0);
+    const [end_t, set_end_t] = useState(100);
+    const [step_t, set_step_t] = useState(1);
+    const [range_diagram, set_range_diagram] = useState(null);
 
-        this.state = {
-          transition_graph: props.transition_graph,
-            nodes_data: props.nodes_data,
-            data: [],
-            begin_t: 1,
-            end_t: 100,
-            step_t: 1
+    const handleOnInputBeginT = (e) => {
+        if(e.target.value.match("^[0-9]*$") != null){
+            set_begin_t(parseInt(e.target.value));
         }
-    }
+    };
 
-    render () {
-        const data = this.state.data;
+    const handleOnInputEndT = (e) => {
+        if(e.target.value.match("^[0-9]*$") != null){
+            set_end_t(parseInt(e.target.value));
+        }
+    };
 
-        const handleGenerateAndDisplayGraphic = (e) => {
-          const nodes_data = this.state.nodes_data;
-          const transition_graph = this.state.transition_graph;
+    const handleOnInputStepT = (e) => {
+        if(e.target.value.match("^[0-9]*$") != null){
+            set_step_t(parseInt(e.target.value));
+        }
+    };
+
+    const handleGenerateAndDisplayGraphic = (e) => {
+        const [nodes_data, transition_graph] = transform_structure_from_mydiagram_to_graph(NodesEdges.nodes, NodesEdges.edges);
 
           let parallel_nodes_lines = [] // Параллельные соединения всех возможных вариаций от начала до конца
 
@@ -62,7 +70,7 @@ export class ProbabilityChart extends Component {
           /// Считаем для каждого дискретного момента t значения для каждой параллельной линии последовательности объектов, в конце считаем P_t системы из этих параллельных линий
           let new_data = [];
           
-          for (let current_t = this.state.begin_t; current_t <= this.state.end_t; current_t += this.state.step_t){
+          for (let current_t = begin_t; current_t <= end_t; current_t += step_t){
             let parallel_lines_s_p_t = [];
 
             // Считаем P_t каждой последовательной линии системы
@@ -119,59 +127,60 @@ export class ProbabilityChart extends Component {
             });
           }
 
-          this.setState({data: new_data});
-        }
-
-        return (
-            <Container fluid>
-                <Form>
-                    <Form.Group>
-                        <Form.Label> Начальная позиция времени (t) </Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="0"
-                            value={this.state.begin_t}
-                            pattern="[0-9]*"
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label> Конечная позиция времени (t) </Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="0"
-                            value={this.state.end_t}
-                            pattern="[0-9]*"
-                        />
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Label> Шаг времени (t) </Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="0"
-                            value={this.state.step_t}
-                            pattern="[0-9]*"
-                        />
-                    </Form.Group>
-
-                    <Button
-                        className="mt-3 mb-3"
-                        variant="primary"
-                        type="button"
-                        onClick={handleGenerateAndDisplayGraphic}
-                        >
-                        Построить
-                    </Button>
-                </Form>
-
-                <LineChart width={400} height={400} data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                    <XAxis dataKey="name" />
-                    <Tooltip />
-                    <CartesianGrid stroke="#f5f5f5" />
-                    <Line type="monotone" dataKey="p_t" stroke="#ff7300" />
-                </LineChart>
-            </Container>
-        )
+          set_range_diagram(
+            <LineChart width={650} height={700} data={new_data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                <XAxis dataKey="name" />
+                <Tooltip />
+                <CartesianGrid stroke="#f5f5f5" />
+                <Line type="monotone" dataKey="p_t" stroke="#ff7300" />
+            </LineChart>
+          );
     }
-}
 
-export default ProbabilityChart;
+    return (
+        <Container className="sidebar">
+            <Form>
+                <Form.Group>
+                    <Form.Label> Начальная позиция времени (t) </Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="0"
+                        value={begin_t}
+                        onInput={handleOnInputBeginT}
+                    />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label> Конечная позиция времени (t) </Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="0"
+                        value={end_t}
+                        onInput={handleOnInputEndT}
+                    />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label> Шаг времени (t) </Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="0"
+                        value={step_t}
+                        onInput={handleOnInputStepT}
+                    />
+                </Form.Group>
+
+                <Button
+                    className="mt-3 mb-3"
+                    variant="primary"
+                    type="button"
+                    onClick={handleGenerateAndDisplayGraphic}
+                    >
+                    Построить
+                </Button>
+            </Form>
+
+            {range_diagram}
+        </Container>
+    );
+};
+
+export default RangeProbabilityChartTab;
