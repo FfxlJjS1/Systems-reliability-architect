@@ -34,6 +34,12 @@ export function ISNode({ data }) {
     }
 
     const handleOnInput = (parameter_name, value) => {
+        const regex = /^([0-9]+|[0-9]+\.\d*)$/;
+
+        if (! regex.test(String(value))) {
+            return;
+        }
+
         let params = {};
         
         Object.assign(params, parameters);
