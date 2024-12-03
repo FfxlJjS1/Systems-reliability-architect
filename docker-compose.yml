@@ -3,6 +3,6 @@ version: "3.5"
 services:
   front.spa:
     container_name: front.spa
-    build: ./spa
+    build: ./systems_reliability_architect
     ports:
     - '3000:3000'
