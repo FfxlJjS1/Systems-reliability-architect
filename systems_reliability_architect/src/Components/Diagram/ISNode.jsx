@@ -78,7 +78,7 @@ export function ISNode({ data }) {
                         <br/>
                         <Form.Group>
                             <Form.Label>Вид закона:</Form.Label>
-                            <Form.Select style={{width: '20 0px'}} onChange={e => handleSelectLaw(e.target.value)}>
+                            <Form.Select style={{width: '20 0px'}} value={law_number} onChange={e => handleSelectLaw(e.target.value)}>
                                 <option value="1">Экспоненциальный закон</option>
                                 <option value="2">Распределение Рэлея</option>
                                 <option value="3">Распределение Вэйбулля</option>
