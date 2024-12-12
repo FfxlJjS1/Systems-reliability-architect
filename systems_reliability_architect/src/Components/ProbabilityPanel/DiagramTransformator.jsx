@@ -11,11 +11,13 @@ export function transform_structure_from_mydiagram_to_graph(nodes, edges) {
 
         if (node_id == 0 || node_id == 1) {
             nodes_data[node_id] = {
-                "Тип закона распределения": 0
+                "Тип закона распределения": 0,
+                "label": (node_id == 0 ? "Начальная точка" : "Конечная точка")
             };
         }
         else {
             nodes_data[node_id] = node["data"]["parameters"];
+            nodes_data[node_id]["label"] = node["data"]["label"];
         }
     }
 

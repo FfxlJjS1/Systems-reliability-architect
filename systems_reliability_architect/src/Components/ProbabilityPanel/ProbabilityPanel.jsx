@@ -3,6 +3,7 @@ import { Container } from 'react-bootstrap';
 
 import RangeProbabilityChartTab from "./RangeProbabilityChartTab";
 import CurrentProbabilityValuesTab from './CurrentProbabilityValuesTab';
+import TransitionTableTab from "./TransitionTable";
 import Tabs from "./Tabs";
 
 export class ProbabilityPanel extends Component {
@@ -12,7 +13,7 @@ export class ProbabilityPanel extends Component {
         this.tabs = [
           { label: 'По диапазону', content: <RangeProbabilityChartTab /> },
           { label: 'По константе', content: <CurrentProbabilityValuesTab /> },
-          { label: 'Таблица переходов', content: null }
+          { label: 'Таблица переходов', content: <TransitionTableTab /> }
         ];
     }
 

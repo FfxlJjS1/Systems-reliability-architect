@@ -41,6 +41,34 @@ export class NodesEdges {
     static setEdges = null;
 }
 
+const hasCycle = (edges, source) => {
+    const visited = new Set(); // Для отслеживания посещенных узлов
+    const stack = [source]; // Начинаем обход с узла source
+
+    while (stack.length > 0) {
+        const current = stack.pop();
+
+        // Если текущий узел уже был посещен, значит есть цикл
+        if (visited.has(current)) {
+            return true;
+        }
+
+        // Добавляем текущий узел в посещенные
+        visited.add(current);
+
+        // Получаем соседей текущего узла, учитывая направление ребер
+        const neighbors = edges
+            .filter(edge => edge.source === current)
+            .map(edge => edge.target);
+
+        // Добавляем соседей в стек для дальнейшего обхода
+        stack.push(...neighbors);
+    }
+
+    // Если мы дошли до конца и не нашли цикла, возвращаем false
+    return false;
+};
+
 const DnDFlow = () => {
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -55,7 +83,16 @@ const DnDFlow = () => {
 
     const onConnect = useCallback(
         (params) => {
-            // Настроить проверку на отсутствие зацикленности
+            const { source, target } = params;
+
+            console.log(edges);
+            console.log(params);
+
+            // Проверка на зацикленность с учетом нового ребра
+            if (hasCycle([...edges, params], source)) {
+                console.warn("Добавление этого ребра приведет к зацикливанию!");
+                return;
+            }
 
             params["markerEnd"] = {
                 type: MarkerType.ArrowClosed,
